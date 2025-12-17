@@ -1,0 +1,33 @@
+{
+  "name": "digitaler-concierge-app-lernprojekt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "build": "npm run build --workspaces",
+    "install:all": "npm install",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lordponchik/digitaler-concierge-app-lernprojekt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lordponchik/digitaler-concierge-app-lernprojekt/issues"
+  },
+  "homepage": "https://github.com/lordponchik/digitaler-concierge-app-lernprojekt#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
