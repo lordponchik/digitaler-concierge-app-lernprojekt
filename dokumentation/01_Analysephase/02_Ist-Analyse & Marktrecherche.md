@@ -1,7 +1,7 @@
 ***
 [Zurück zu README.md](../../README.md)
 ***
-# Ist-Analyse & Marktrecherche (2 Stunden)
+# Ist-Analyse & Marktrecherche (1 Stunde)
 
 * Ergebnis: Prozessanalyse und Marktvergleich
     

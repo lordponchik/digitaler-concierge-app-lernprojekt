@@ -1,7 +1,7 @@
 ***
 [Zurück zu README.md](../../README.md)
 ***
-# Projektinitialisierung & Anforderungserfassung (3 Stunden)
+# Projektinitialisierung & Anforderungserfassung (2 Stunden)
 
 * Ergebnis: Lastenheft mit User Stories und Anforderungen
     
