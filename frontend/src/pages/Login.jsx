@@ -82,7 +82,7 @@ const Login = () => {
           }}
         >
           <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-            🔒 Hotel Concierge
+             Hotel Concierge
           </Typography>
           
           {error && (
@@ -129,15 +129,6 @@ const Login = () => {
             >
               {loading ? <CircularProgress size={24} /> : 'ANMELDEN'}
             </Button>
-            
-            <Box sx={{ mt: 2, textAlign: 'center' }}>
-              <Typography variant="body2" color="text.secondary">
-                Probleme beim Login?
-              </Typography>
-              <Typography variant="body2" color="primary">
-                Rezeption: 112
-              </Typography>
-            </Box>
           </Box>
         </Paper>
         
