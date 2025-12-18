@@ -5,3 +5,6 @@
 - [Ist-Analyse & Marktrecherche](./dokumentation/01_Analysephase/02_Ist-Analyse%20&%20Marktrecherche.md) (1 Stunde)
 - [Soll-Konzept & Architekturentwurf](./dokumentation/01_Analysephase/03_Soll-Konzept%20&%20Architekturentwurf.md) (1 Stunde)
 - [Wirtschaftlichkeitsbetrachtung](./dokumentation/01_Analysephase/04_Wirtschaftlichkeitsbetrachtung) (1 Stunde)
+
+### Entwurfsphase [4 Stunden]:
+- [Zeit- & Ressourcenplanung](./dokumentation/02_Entwurfsphase/01_Zeit-%20&%20Ressourcenplanung.md) (1 Stunde)
