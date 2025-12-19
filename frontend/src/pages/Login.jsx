@@ -10,12 +10,13 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
+import { loginGuest } from '../services/auth';
 import { useAuth } from '../contexts/AuthContext';
-import { authenticateGuest } from '../services/auth';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { loginGuest: loginGuestContext } = useAuth();
+
   const [formData, setFormData] = useState({
     roomNumber: '',
     pinCode: '',
@@ -36,26 +37,17 @@ const Login = () => {
     setLoading(true);
 
     try {
-      if (formData.roomNumber === '102' && formData.pinCode === '4297') {
-        const guestData = {
-          guestId: 'guest_abc123',
-          name: 'Thomas Schmidt',
-          roomNumber: '102',
-        };
-        
-        const roomData = {
-          roomId: 'room_102',
-          roomNumber: '102',
-        };
-        
-        login(guestData, roomData);
+      const result = await loginGuest(formData.roomNumber, formData.pinCode);
+      
+      if (result.success) {
+        loginGuestContext(result.user);
         navigate('/dashboard');
       } else {
-        setError('Falsche Zimmernummer oder PIN');
+        setError(result.error);
       }
-      
     } catch (err) {
-      setError('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+      setError('Ein unerwarteter Fehler ist aufgetreten');
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -63,82 +55,57 @@ const Login = () => {
 
   return (
     <Container maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Paper
-          elevation={3}
-          sx={{
-            padding: 4,
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-             Hotel Concierge
+      <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Paper elevation={3} sx={{ p: 4, width: '100%', textAlign: 'center' }}>
+          <Typography variant="h5" gutterBottom>
+            Hotel STAY.GOOD
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            Digitaler Concierge Service
           </Typography>
           
           {error && (
-            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+            <Alert severity="error" sx={{ mb: 2 }}>
               {error}
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+          <Box component="form" onSubmit={handleSubmit}>
             <TextField
-              margin="normal"
-              required
               fullWidth
-              id="roomNumber"
+              margin="normal"
               label="Zimmernummer"
               name="roomNumber"
               value={formData.roomNumber}
               onChange={handleChange}
-              autoComplete="off"
-              autoFocus
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              required
+              inputProps={{ inputMode: 'numeric' }}
             />
             
             <TextField
-              margin="normal"
-              required
               fullWidth
-              name="pinCode"
+              margin="normal"
               label="PIN-Code"
+              name="pinCode"
               type="password"
-              id="pinCode"
               value={formData.pinCode}
               onChange={handleChange}
-              autoComplete="off"
-              inputProps={{ maxLength: 4, inputMode: 'numeric', pattern: '[0-9]*' }}
+              required
+              inputProps={{ maxLength: 4, inputMode: 'numeric' }}
             />
             
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, py: 1.5 }}
+              size="large"
+              sx={{ mt: 3, mb: 2 }}
               disabled={loading}
             >
               {loading ? <CircularProgress size={24} /> : 'ANMELDEN'}
             </Button>
           </Box>
         </Paper>
-        
-        <Button
-          variant="outlined"
-          sx={{ mt: 2 }}
-          onClick={() => navigate('/admin/login')}
-        >
-          Mitarbeiter-Login
-        </Button>
       </Box>
     </Container>
   );

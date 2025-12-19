@@ -16,9 +16,6 @@ import {
 } from '@mui/material';
 import {
   CleaningServices,
-  DirectionsCar,
-  Bathtub,
-  Notifications,
   Info,
   Person,
   Logout,
@@ -42,13 +39,6 @@ const Dashboard = () => {
     navigate('/login');
   };
 
-  const quickActions = [
-    { icon: <Bathtub />, label: 'Handtücher', color: '#1a56db', route: '/services?type=towels' },
-    { icon: <CleaningServices />, label: 'Reinigung', color: '#0e9f6e', route: '/services?type=cleaning' },
-    { icon: <DirectionsCar />, label: 'Taxi', color: '#f05252', route: '/services?type=taxi' },
-    { icon: <Notifications />, label: 'Wecker', color: '#8b5cf6', route: '/services?type=wakeup' },
-  ];
-
   return (
     <Container maxWidth="md">
       {}
@@ -56,7 +46,7 @@ const Dashboard = () => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box>
             <Typography variant="h5" gutterBottom>
-              Willkommen, {guestData?.name || 'Gast'}
+              Willkommen, {guestData?.guestName || 'Gast'}
             </Typography>
             <Typography variant="body1" color="text.secondary">
               Zimmer {roomData?.roomNumber || '---'}
@@ -67,34 +57,6 @@ const Dashboard = () => {
           </IconButton>
         </Box>
       </Box>
-
-      {}
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Schnellzugriff
-      </Typography>
-      <Grid container spacing={2} sx={{ mb: 4 }}>
-        {quickActions.map((action, index) => (
-          <Grid item xs={6} sm={3} key={index}>
-            <Card 
-              sx={{ 
-                textAlign: 'center', 
-                cursor: 'pointer',
-                '&:hover': { bgcolor: '#f9fafb' }
-              }}
-              onClick={() => navigate(action.route)}
-            >
-              <CardContent>
-                <Box sx={{ color: action.color, fontSize: 40, mb: 1 }}>
-                  {action.icon}
-                </Box>
-                <Typography variant="body2">{action.label}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-
-      {}
       <Typography variant="h6" sx={{ mb: 2 }}>
         Meine Anfragen
       </Typography>

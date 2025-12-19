@@ -1,53 +1,152 @@
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children, value }) => {
-  const [authState, setAuthState] = useState({
-    isAuthenticated: value?.isAuthenticated || false,
-    isAdmin: value?.isAdmin || false,
-    guestData: null,
-    roomData: null,
-  });
+const getInitialAuthState = () => {
+  try {
+    const guestSession = localStorage.getItem('guestSession');
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
-  const login = (guestData, roomData) => {
-    setAuthState({
+    const guestData = JSON.parse(localStorage.getItem('guestData') || 'null');
+    const roomData = JSON.parse(localStorage.getItem('roomData') || 'null');
+
+    if (guestSession) {
+      const sessionData = JSON.parse(guestSession);
+      return {
+        isAuthenticated: true,
+        isAdmin: false,
+        user: sessionData,
+        guestData: sessionData, 
+        roomData: { roomNumber: sessionData.roomNumber },
+      };
+    } else if (guestData && roomData) {
+      return {
+        isAuthenticated: !!isAuthenticated,
+        isAdmin: !!isAdmin,
+        user: guestData,
+        guestData: guestData,
+        roomData: roomData,
+      };
+    } else {
+      return {
+        isAuthenticated: false,
+        isAdmin: false,
+        user: null,
+        guestData: null,
+        roomData: null,
+      };
+    }
+  } catch (e) {
+    console.error('Error loading auth state:', e);
+    return {
+      isAuthenticated: false,
+      isAdmin: false,
+      user: null,
+      guestData: null,
+      roomData: null,
+    };
+  }
+};
+
+export const AuthProvider = ({ children }) => {
+  const [authState, setAuthState] = useState(() => getInitialAuthState());
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAndUpdateAuth = async () => {
+      if (authState.isAuthenticated && authState.user?.guestId) {
+        try {
+        } catch (error) {
+          console.error('Error updating auth data:', error);
+        }
+      }
+      setLoading(false);
+    };
+
+    checkAndUpdateAuth();
+  }, []);
+
+  const loginGuest = (sessionData) => {
+    const newState = {
       isAuthenticated: true,
       isAdmin: false,
-      guestData,
-      roomData,
-    });
+      user: sessionData,
+      guestData: sessionData, 
+      roomData: { roomNumber: sessionData.roomNumber }, 
+    };
+    
+    setAuthState(newState);
+    
+    localStorage.setItem('guestSession', JSON.stringify(sessionData));
     localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('guestData', JSON.stringify(guestData));
-    localStorage.setItem('roomData', JSON.stringify(roomData));
+    localStorage.setItem('guestData', JSON.stringify(sessionData)); // для совместимости
+    localStorage.setItem('roomData', JSON.stringify({ roomNumber: sessionData.roomNumber })); // для совместимости
+  };
+
+  const login = (guestData, roomData) => {
+    const sessionData = {
+      ...guestData,
+      roomNumber: roomData?.roomNumber || guestData?.roomNumber,
+      role: 'guest'
+    };
+    
+    loginGuest(sessionData);
   };
 
   const adminLogin = () => {
-    setAuthState({
+    const newState = {
       isAuthenticated: true,
       isAdmin: true,
+      user: { role: 'admin' },
       guestData: null,
       roomData: null,
-    });
+    };
+    
+    setAuthState(newState);
     localStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('isAdmin', 'true');
+    localStorage.removeItem('guestSession');
+    localStorage.removeItem('guestData');
+    localStorage.removeItem('roomData');
   };
 
   const logout = () => {
     setAuthState({
       isAuthenticated: false,
       isAdmin: false,
+      user: null,
       guestData: null,
       roomData: null,
     });
+    
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('isAdmin');
+    localStorage.removeItem('guestSession');
     localStorage.removeItem('guestData');
     localStorage.removeItem('roomData');
+    localStorage.removeItem('roomNumber');
+  };
+
+  const refreshUserData = async () => {
+    if (!authState.user?.guestId) return;
+    
+    try {
+    } catch (error) {
+      console.error('Error refreshing user data:', error);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ ...authState, login, adminLogin, logout }}>
+    <AuthContext.Provider value={{ 
+      ...authState, 
+      loading,
+      login, 
+      loginGuest,
+      adminLogin, 
+      logout,
+      refreshUserData 
+    }}>
       {children}
     </AuthContext.Provider>
   );

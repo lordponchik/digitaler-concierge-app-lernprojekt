@@ -2,48 +2,62 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: '#1a56db',
-    },
-    secondary: {
-      main: '#0e9f6e',
-    },
+    primary: { main: '#1a56db' },
+    secondary: { main: '#0e9f6e' },
   },
 });
 
-function AppRoutes() {
-  const { isAuthenticated, isAdmin } = useAuth();
-
-  return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route 
-        path="/dashboard" 
-        element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} 
-      />
-      <Route path="/" element={<Navigate to="/login" />} />
-    </Routes>
-  );
-}
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+  
+  return children;
+};
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 500);
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
+      }}>
+        <div>Lade Hotel Concierge...</div>
+      </div>
+    );
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AuthProvider>
-        <Router>
-          <div className="App">
-            <AppRoutes />
-          </div>
-        </Router>
-      </AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/" element={<Navigate to="/login" />} />
+        </Routes>
+      </Router>
     </ThemeProvider>
   );
 }
