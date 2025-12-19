@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Info from './pages/Info';
 
 const theme = createTheme({
   palette: {
@@ -53,6 +54,11 @@ function App() {
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/info" element={
+            <ProtectedRoute>
+              <Info />
             </ProtectedRoute>
           } />
           <Route path="/" element={<Navigate to="/login" />} />

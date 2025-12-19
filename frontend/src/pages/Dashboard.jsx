@@ -113,28 +113,10 @@ const Dashboard = () => {
           <Grid item xs={4}>
             <Button 
               fullWidth 
-              startIcon={<CleaningServices />}
-              onClick={() => navigate('/services')}
-            >
-              Service
-            </Button>
-          </Grid>
-          <Grid item xs={4}>
-            <Button 
-              fullWidth 
               startIcon={<Info />}
               onClick={() => navigate('/info')}
             >
               Info
-            </Button>
-          </Grid>
-          <Grid item xs={4}>
-            <Button 
-              fullWidth 
-              startIcon={<Person />}
-              onClick={() => navigate('/profile')}
-            >
-              Profil
             </Button>
           </Grid>
         </Grid>
