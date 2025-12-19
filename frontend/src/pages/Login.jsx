@@ -107,6 +107,15 @@ const Login = () => {
           </Box>
         </Paper>
       </Box>
+      <Box sx={{ mt: 2, textAlign: 'center' }}>
+  <Button
+    variant="text"
+    onClick={() => navigate('/admin/login')}
+    size="small"
+  >
+    Mitarbeiter-Login
+  </Button>
+</Box>
     </Container>
   );
 };

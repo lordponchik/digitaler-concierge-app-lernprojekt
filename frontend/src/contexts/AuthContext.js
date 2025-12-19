@@ -10,15 +10,24 @@ const getInitialAuthState = () => {
 
     const guestData = JSON.parse(localStorage.getItem('guestData') || 'null');
     const roomData = JSON.parse(localStorage.getItem('roomData') || 'null');
+    const adminData = JSON.parse(localStorage.getItem('adminData') || 'null');
 
     if (guestSession) {
       const sessionData = JSON.parse(guestSession);
       return {
-        isAuthenticated: true,
-        isAdmin: false,
+        isAuthenticated: !!isAuthenticated,
+        isAdmin: !!isAdmin,
         user: sessionData,
         guestData: sessionData, 
         roomData: { roomNumber: sessionData.roomNumber },
+      };
+    } else if (adminData && isAdmin) {
+      return {
+        isAuthenticated: !!isAuthenticated,
+        isAdmin: !!isAdmin,
+        user: adminData,
+        guestData: null,
+        roomData: null,
       };
     } else if (guestData && roomData) {
       return {
@@ -94,11 +103,11 @@ export const AuthProvider = ({ children }) => {
     loginGuest(sessionData);
   };
 
-  const adminLogin = () => {
+  const adminLogin = (adminData) => {
     const newState = {
       isAuthenticated: true,
       isAdmin: true,
-      user: { role: 'admin' },
+      user: adminData,
       guestData: null,
       roomData: null,
     };
@@ -106,6 +115,7 @@ export const AuthProvider = ({ children }) => {
     setAuthState(newState);
     localStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('isAdmin', 'true');
+    localStorage.setItem('adminData', JSON.stringify(adminData));
     localStorage.removeItem('guestSession');
     localStorage.removeItem('guestData');
     localStorage.removeItem('roomData');
@@ -126,6 +136,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('guestData');
     localStorage.removeItem('roomData');
     localStorage.removeItem('roomNumber');
+    localStorage.removeItem('adminData');
   };
 
   const refreshUserData = async () => {
